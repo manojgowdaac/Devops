@@ -1,9 +1,0 @@
-resource "aws_instance" "manoj"{
-    #count = 5 --> this creats 5 ec2 at once 
-    ami = "ami-080e1f13689e07408"
-    instance_type = "t2.micro"
-
-tags ={
-    Name ="hello"
-}
-}
