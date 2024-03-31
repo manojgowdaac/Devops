@@ -1,0 +1,30 @@
+ami = "provide ami_id"
+instance_type = "t2.micro" /* for dev-env*/
+/*instance_type = "t2.medium"  for stage-env*/
+/*instance_type = "t2.xlarge" for prod-env*/
+
+/* this create the state-file respective to the env*/
+
+/* when is doing it for dev i came and modified tfvars file , is not be done 
+like this.
+to automate this process 
+Insted creat dev.tfvars / stage.tfvars / prod.tfvars 
+now while applying using:- terraform apply -var-file=dev.tfvars
+terraform apply -var-file=stage.tfvars*/
+
+                 /*      OR        */
+/* in main.tf  do this when your are working with respective workspace-env
+
+variable "instance_type"{
+    type = map(string)
+
+    default = {
+        "dev"="t2.micro"
+        "stage"="t2.medium"
+        "prod"="t2.xlarge"
+    }
+}
+
+module "ec2_instance"{
+    instance_type = lookup(var.instance_type,terraform workspace, "t2.micro" (if specified workspace is not present it will creat with default")
+}*/
