@@ -1,0 +1,29 @@
+resource "aws_instance" "manoj"{
+    #count = 5 --> this creats 5 ec2 at once 
+    ami = "add AMI_ID"
+    instance_type = "t2.micro"
+    security_groups = [aws_security_group.Tf_security.name]
+     /*key_pair = "name of the key_pair" /*this is using through aws-UI */  
+
+tags ={
+    Name ="hello1"
+ }
+}
+
+# second way of creating key_pair using terraform
+
+resource "aws_key_pair" "terraform_keypair" {
+  key_name   = "terraform_keypair"
+  public_key = tls_private_key.rsa.public_key_openssh
+}
+#we need to store our private key in local machine so that we can ssh into instance
+# so we create local_file to store the private_key
+resource "local_file" "terraform_keypair" {
+  content  = tls_private_key.rsa.private_key_pem
+  filename = "terraform_keypair"
+}
+# RSA key of size 4096 bits
+resource "tls_private_key" "rsa" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
