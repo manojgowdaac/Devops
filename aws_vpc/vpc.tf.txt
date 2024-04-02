@@ -1,0 +1,34 @@
+#creation of VPC
+resource "aws_vpc" "my_vpc"{
+    cidr_block = "10.0.0.0/16"
+    tags ={
+        Name = "MyVPC_terraform"
+    }
+}
+#creation of PUBLIC SUBNET
+resource "aws_subnet" "my_public_subnet"{
+    vpc_id = aws_vpc.my_vpc.id
+    cidr_block = "10.0.1.0/24"
+}
+#creation of PRIVATE SUBNET
+resource "aws_subnet" "my_private_subnet"{
+    vpc_id = aws_vpc.my_vpc.id
+    cidr_block = "10.0.2.0/24"
+}
+#creation of INTERNET-GATEWAY
+resource "aws_internet_gateway" "igw"{
+    vpc_id = aws_vpc.my_vpc.id
+}
+#creation of ROUTE-TABLE
+resource "aws_route_table" "public_route"{
+    vpc_id = aws_vpc.my_vpc.id
+    route{
+        cidr_block= "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.igw.id
+    }
+}
+# ROUTE TABLE ASSOCIATION PUBLIC SUBNET
+resource "aws_route_table_association" "public_association"{
+    subnet_id = aws_subnet.my_public_subnet.id
+    route_table_id = aws_route_table.public_route.id
+}
